@@ -1,8 +1,12 @@
 package com.cjj.spannablestream;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
-import android.text.SpannableString;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.FloatRange;
+import android.support.annotation.StyleRes;
 import android.text.SpannableStringBuilder;
 import android.widget.TextView;
 
@@ -12,12 +16,14 @@ import android.widget.TextView;
  * @author chenjj2048
  */
 public interface ISpannable {
+    ISpannable alwaysNewLineAfterInsert(boolean bAlwayInsertNewLine);
+
     /**
      * 创建新文本
      */
-    SpannableStream text(CharSequence str);
+    ISpannable text(CharSequence str);
 
-    SpannableStream newLine();
+    ISpannable newLine();
 
     SpannableStringBuilder build();
 
@@ -26,16 +32,46 @@ public interface ISpannable {
     /**
      * 前景色
      */
-    SpannableStream color(@ColorInt int color);
+    ISpannable color(@ColorInt int color);
 
-    SpannableStream colorRes(@ColorRes int colorRes);
+    ISpannable colorRes(@ColorRes int colorRes);
 
     /**
      * 背景色
      */
-    SpannableStream bgColor(@ColorInt int color);
+    ISpannable bgColor(@ColorInt int color);
 
-    SpannableStream bgColorRes(@ColorRes int colorRes);
+    ISpannable bgColorRes(@ColorRes int colorRes);
 
+    ISpannable bold();
 
+    ISpannable italic();
+
+    ISpannable underline();
+
+    ISpannable strikeThrough();
+
+    ISpannable superScript();
+
+    ISpannable subScript();
+
+    ISpannable textSizePx(int px);
+
+    ISpannable textSizeDp(int dp);
+
+    ISpannable relativeTextSize(@FloatRange(from = 0, to = 10) float ratio);
+
+    ISpannable scaleX(@FloatRange(from = 0, to = 10) float ratio);
+
+    ISpannable image(Drawable drawable);
+
+    ISpannable image(@DrawableRes int drawableRes);
+
+    ISpannable image(Bitmap bitmap);
+
+    ISpannable textUrl(String str);
+
+    ISpannable textApperance(@StyleRes int res);
+
+    ISpannable onClick(SpannableClickListener listener);
 }
