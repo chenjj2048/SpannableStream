@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SpannableStream</string>
+    <string name="text">You can replace the style of all the specified text in the text,
+        such as replacing the \"text\" in this paragraph.</string>
 </resources>

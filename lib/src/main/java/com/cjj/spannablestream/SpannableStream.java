@@ -3,37 +3,27 @@ package com.cjj.spannablestream;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.FloatRange;
 import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
-import android.text.Layout;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.AlignmentSpan;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.ScaleXSpan;
-import android.text.style.StrikethroughSpan;
-import android.text.style.StyleSpan;
-import android.text.style.SubscriptSpan;
-import android.text.style.SuperscriptSpan;
-import android.text.style.TextAppearanceSpan;
 import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cjj.spannablestream.click.CustomLinkMovementMethod;
+import com.cjj.spannablestream.click.OnSpannableClickListener;
+import com.cjj.spannablestream.color.ColorConfig;
+import com.cjj.spannablestream.interfacer.ISpanOperate;
 import com.cjj.spannablestream.interfacer.ISpannable;
 
 import java.util.Iterator;
@@ -61,7 +51,7 @@ public class SpannableStream implements ISpannable {
     /**
      * When use this.appendText() to add a new string,it will not add a new line default.
      */
-    private boolean bNewLineAdd = false;
+    private boolean lineBreak = false;
 
     /**
      * Private Constructor, use SpannableStream.with(context) to create new instance instead.
@@ -82,27 +72,14 @@ public class SpannableStream implements ISpannable {
     }
 
     /**
-     * Setting span attribute to the last string
-     *
-     * @param span span
-     */
-    private void applyStyle(Object span) {
-        final SpannableString lastString = mList.getLast();
-        if (lastString == null) return;
-
-        final int size = lastString.length();
-        lastString.setSpan(span, 0, size, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    }
-
-    /**
      * Change configure,whether add a new line when append a string
      *
-     * @param needNewLine whether add a new line when use appendText() function.
+     * @param alwayLineBreak whether add a new line when use appendText() function.
      * @return this
      */
     @Override
-    public ISpannable configueAddNewLineAfterInsert(boolean needNewLine) {
-        this.bNewLineAdd = needNewLine;
+    public ISpannable configueAlwaysLineBreak(boolean alwayLineBreak) {
+        this.lineBreak = alwayLineBreak;
         return this;
     }
 
@@ -132,7 +109,7 @@ public class SpannableStream implements ISpannable {
     public void into(TextView textView) {
         final SpannableStringBuilder strBuilder = build();
         textView.setText(strBuilder);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setMovementMethod(CustomLinkMovementMethod.getInstance());
     }
 
     /**
@@ -158,7 +135,7 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable appendText(CharSequence str) {
-        if (bNewLineAdd && mList.size() != 0)
+        if (lineBreak && mList.size() != 0 && !NEW_LINE.equals(str))
             appendNewLine();
 
         mList.add(new SpannableString(str));
@@ -168,17 +145,13 @@ public class SpannableStream implements ISpannable {
     /**
      * Append text
      *
-     * @param str         str
-     * @param withNewLine whether need new line after append a string.
-     *                    If this is first line, new line will not be added.
+     * @param resId resId
      * @return this
      */
     @Override
-    public ISpannable appendText(CharSequence str, boolean withNewLine) {
-        if (withNewLine && mList.size() != 0)
-            appendNewLine();
-        mList.add(new SpannableString(str));
-        return this;
+    public ISpannable appendText(@StringRes int resId) {
+        String str = context.getString(resId);
+        return appendText(str);
     }
 
     /**
@@ -188,7 +161,19 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable appendNewLine() {
-        return appendText(NEW_LINE, false);
+        return appendText(NEW_LINE);
+    }
+
+    /**
+     * Append lines
+     *
+     * @param count count of line break
+     * @return this
+     */
+    public ISpannable appendNewLine(int count) {
+        for (int i = 0; i < count; i++)
+            appendNewLine();
+        return this;
     }
 
     /**
@@ -199,7 +184,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable color(@ColorInt int color) {
-        applyStyle(new ForegroundColorSpan(color));
+        SpannableOperate.getDefault().color(color).build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -211,8 +197,9 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable colorRes(@ColorRes int colorRes) {
-        int value = ContextCompat.getColor(context, colorRes);
-        return color(value);
+        SpannableOperate.with(context).colorRes(colorRes).build()
+                .apply(mList.getLast());
+        return this;
     }
 
     /**
@@ -223,7 +210,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable bgColor(@ColorInt int color) {
-        applyStyle(new BackgroundColorSpan(color));
+        SpannableOperate.getDefault().bgColor(color).build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -235,8 +223,9 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable bgColorRes(@ColorRes int colorRes) {
-        int value = ContextCompat.getColor(context, colorRes);
-        return bgColor(value);
+        SpannableOperate.with(context).bgColorRes(colorRes).build()
+                .apply(mList.getLast());
+        return this;
     }
 
     /**
@@ -246,7 +235,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable bold() {
-        applyStyle(new StyleSpan(Typeface.BOLD));
+        SpannableOperate.getDefault().bold().build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -257,7 +247,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable italic() {
-        applyStyle(new StyleSpan(Typeface.ITALIC));
+        SpannableOperate.getDefault().italic().build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -268,7 +259,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable underline() {
-        applyStyle(new UnderlineSpan());
+        SpannableOperate.getDefault().underline().build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -279,7 +271,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable strikeThrough() {
-        applyStyle(new StrikethroughSpan());
+        SpannableOperate.getDefault().strikeThrough().build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -290,7 +283,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable superScript() {
-        applyStyle(new SuperscriptSpan());
+        SpannableOperate.getDefault().superScript().build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -301,7 +295,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable subScript() {
-        applyStyle(new SubscriptSpan());
+        SpannableOperate.getDefault().subScript().build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -313,8 +308,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable superScript(float textSizeRatio) {
-        superScript();
-        relativeTextSize(textSizeRatio);
+        SpannableOperate.getDefault().superScript(textSizeRatio).build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -326,8 +321,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable subScript(float textSizeRatio) {
-        subScript();
-        relativeTextSize(textSizeRatio);
+        SpannableOperate.getDefault().subScript(textSizeRatio).build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -339,7 +334,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable textSizePx(int px) {
-        applyStyle(new AbsoluteSizeSpan(px));
+        SpannableOperate.getDefault().textSizePx(px).build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -351,7 +347,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable textSizeDp(int dp) {
-        applyStyle(new AbsoluteSizeSpan(dp, true));
+        SpannableOperate.getDefault().textSizeDp(dp).build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -363,9 +360,9 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable textSizeSp(int sp) {
-        float scaleDensity = context.getResources().getDisplayMetrics().scaledDensity;
-        int px = (int) (sp * scaleDensity + 0.5);
-        return textSizePx(px);
+        SpannableOperate.with(context).textSizeSp(sp).build()
+                .apply(mList.getLast());
+        return this;
     }
 
     /**
@@ -375,8 +372,9 @@ public class SpannableStream implements ISpannable {
      * @return this
      */
     @Override
-    public ISpannable relativeTextSize(@FloatRange(from = 0, to = 10) float ratio) {
-        applyStyle(new RelativeSizeSpan(ratio));
+    public ISpannable relativeTextSize(float ratio) {
+        SpannableOperate.getDefault().relativeTextSize(ratio).build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -387,8 +385,9 @@ public class SpannableStream implements ISpannable {
      * @return this
      */
     @Override
-    public ISpannable scaleX(@FloatRange(from = 0, to = 10) float ratio) {
-        applyStyle(new ScaleXSpan(ratio));
+    public ISpannable scaleX(float ratio) {
+        SpannableOperate.getDefault().scaleX(ratio).build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -401,7 +400,8 @@ public class SpannableStream implements ISpannable {
     @Override
     public ISpannable appendImage(Drawable drawable) {
         mList.add(PICTURE_PLACEHOLDER);
-        applyStyle(new ImageSpan(drawable));
+        final SpannableString str = mList.getLast();
+        str.setSpan(new ImageSpan(drawable), 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
@@ -427,32 +427,35 @@ public class SpannableStream implements ISpannable {
     @Override
     public ISpannable appendImage(Bitmap bitmap) {
         mList.add(PICTURE_PLACEHOLDER);
-        applyStyle(new ImageSpan(context, bitmap));
+        final SpannableString str = mList.getLast();
+        str.setSpan(new ImageSpan(context, bitmap), 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
     /**
      * Append url text
      *
-     * @param str str
+     * @param urlAddress url
      * @return this
      */
     @Override
-    public ISpannable appendUrlText(String str) {
-        mList.add(new SpannableString(str));
-        applyStyle(new URLSpan(str));
+    public ISpannable appendUrlText(String urlAddress) {
+        mList.add(new SpannableString(urlAddress));
+        final SpannableString str = mList.getLast();
+        str.setSpan(new URLSpan(urlAddress), 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return this;
     }
 
     /**
      * Set the last string by style
      *
-     * @param res resource of sytle
+     * @param resId resource of sytle
      * @return this
      */
     @Override
-    public ISpannable textApperance(@StyleRes int res) {
-        applyStyle(new TextAppearanceSpan(context, res));
+    public ISpannable textApperance(@StyleRes int resId) {
+        SpannableOperate.with(context).textApperance(resId).build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -463,12 +466,21 @@ public class SpannableStream implements ISpannable {
      * @return this
      */
     @Override
-    public ISpannable onClick(final OnSpannableClickListener listener) {
-        if (listener == null)
-            return this;
+    public ISpannable onClick(OnSpannableClickListener listener) {
+        SpannableOperate.getDefault().onClick(listener).build()
+                .apply(mList.getLast());
+        return this;
+    }
 
-        final SpannableString spannableString = mList.getLast();
-        applyStyle(new ClickableString(spannableString, listener));
+    /**
+     * @param colorConfig colorConfig
+     * @param listener    listener
+     * @return this
+     */
+    @Override
+    public ISpannable onClick(ColorConfig colorConfig, OnSpannableClickListener listener) {
+        SpannableOperate.getDefault().onClick(colorConfig, listener).build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -479,7 +491,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable aligmentLeft() {
-        applyStyle(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL));
+        SpannableOperate.getDefault().aligmentLeft().build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -490,7 +503,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable aligmentCenter() {
-        applyStyle(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER));
+        SpannableOperate.getDefault().aligmentCenter().build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -501,7 +515,8 @@ public class SpannableStream implements ISpannable {
      */
     @Override
     public ISpannable aligmentRight() {
-        applyStyle(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE));
+        SpannableOperate.getDefault().aligmentRight().build()
+                .apply(mList.getLast());
         return this;
     }
 
@@ -527,12 +542,12 @@ public class SpannableStream implements ISpannable {
      * @return this
      */
     @Override
-    public ISpannable replaceRecentString(CharSequence str, SpannableFunc spans) {
+    public ISpannable replaceString(CharSequence str, ISpanOperate.Build spans) {
         int lastIndex = 0;
         final int FLAG = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
         final SpannableString spanString = mList.getLast();
 
-        if (spans == null || spanString == null)
+        if (spans == null || spanString == null || TextUtils.isEmpty(str))
             return this;
 
         while (lastIndex != -1) {

@@ -1,76 +1,92 @@
 package com.cjj.spannablestream.interfacer;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.FloatRange;
 import android.support.annotation.StyleRes;
+import android.text.SpannableString;
 
-import com.cjj.spannablestream.OnSpannableClickListener;
+import com.cjj.spannablestream.click.OnSpannableClickListener;
+import com.cjj.spannablestream.color.ColorConfig;
 
 /**
  * Created on 2016/8/10
  *
  * @author chenjj2048
  */
-public interface ISpanOperate<T> {
-    /**
-     * 前景色
-     */
-    T color(@ColorInt int color);
+public interface ISpanOperate {
+    interface Collection<T> extends Color<T>, TextSize<T>, TypeFace<T>,
+            UpperSubScript<T>, Aligment<T>, Click<T>, Other<T> {
+    }
 
-    T colorRes(@ColorRes int colorRes);
+    interface Color<T> {
+        T color(@ColorInt int color);
 
-    /**
-     * 背景色
-     */
-    T bgColor(@ColorInt int color);
+        T colorRes(@ColorRes int colorRes);
 
-    T bgColorRes(@ColorRes int colorRes);
+        T bgColor(@ColorInt int color);
 
-    T bold();
+        T bgColorRes(@ColorRes int colorRes);
+    }
 
-    T italic();
+    interface TextSize<T> {
+        T textSizePx(int px);
 
-    T underline();
+        T textSizeDp(int dp);
 
-    T strikeThrough();
+        T textSizeSp(int sp);
 
-    T superScript();
+        T relativeTextSize(float ratio);
 
-    T subScript();
+        T scaleX(float ratio);
+    }
 
-    T superScript(float textSizeRatio);
+    interface TypeFace<T> {
+        T bold();
 
-    T subScript(float textSizeRatio);
+        T italic();
 
-    T textSizePx(int px);
+        T underline();
 
-    T textSizeDp(int dp);
+        T strikeThrough();
+    }
 
-    T textSizeSp(int sp);
+    interface UpperSubScript<T> {
+        T superScript();
 
-    T relativeTextSize(@FloatRange(from = 0, to = 10) float ratio);
+        T subScript();
 
-    T scaleX(@FloatRange(from = 0, to = 10) float ratio);
+        T superScript(float textSizeRatio);
 
-    T appendImage(Drawable drawable);
+        T subScript(float textSizeRatio);
+    }
 
-    T appendImage(@DrawableRes int drawableRes);
+    interface Aligment<T> {
+        T aligmentCenter();
 
-    T appendImage(Bitmap bitmap);
+        T aligmentLeft();
 
-    T appendUrlText(String str);
+        T aligmentRight();
+    }
 
-    T textApperance(@StyleRes int res);
+    interface Click<T> {
+        T onClick(OnSpannableClickListener listener);
 
-    T onClick(OnSpannableClickListener listener);
+        T onClick(ColorConfig colorConfig, OnSpannableClickListener listener);
+    }
 
-    T aligmentCenter();
+    interface Other<T> {
+        T textApperance(@StyleRes int resId);
+    }
 
-    T aligmentLeft();
+    interface Build {
+        Object getCurrentSpan();
 
-    T aligmentRight();
+        void apply(SpannableString spannableString);
+
+        void apply(SpannableString spannableString, int start, int end, int flag);
+
+        int getOperateCount();
+
+        Build build();
+    }
 }
