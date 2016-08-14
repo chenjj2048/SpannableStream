@@ -65,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(widget.getContext(), str, Toast.LENGTH_SHORT).show();
                             }
                         });
+        SpannableStream.with(this)
+                .color(Color.RED)
+                .colorRes(android.R.color.holo_red_light)
+                .bgColor(Color.WHITE)
+                .bgColorRes(android.R.color.white)
+                .into(mTextView);
+
 
         SpannableStream.with(this)
                 .configueAlwaysLineBreak(true)

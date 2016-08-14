@@ -1,16 +1,12 @@
 #SpannableStream
 A library for you to use SpannableString easyly.
 
-###Screenshot
-1
-2
+##Example
+You can gain the [app demo](https://github.com/chenjj2048/SpannableStream/raw/master/app-release.apk) here.
 
+![snapshot 1](https://raw.githubusercontent.com/chenjj2048/SpannableStream/master/snap/1.gif)
 
-#Example
---------
-You can gain the app demo here.
-
-To achieve the effect in first screenshot, you can use code as follows:
+To achieve the effect, you can use code as follows:
 ```java
 SpannableStream.with(context)
                 .appendText("Example 1").aligmentCenter().bold().underline().relativeTextSize(1.5f).appendNewLine()
@@ -37,7 +33,9 @@ SpannableStream.with(context)
 
 ```
 
-To achieve the effect in second screenshot, you can use code as follows:
+![snapshot 1](https://raw.githubusercontent.com/chenjj2048/SpannableStream/master/snap/2.gif)
+
+To achieve the effect, you can use code as follows:
 ```java
   SpannableOperate mReplaceAttributes = SpannableOperate.with(this)
                 .italic()
@@ -78,10 +76,30 @@ To achieve the effect in second screenshot, you can use code as follows:
                 .into(this, R.id.textView2);
 ```
 
+##How to use
+
+###color
+
+```java
+  SpannableStream.with(this)
+                .color(Color.RED)
+                .colorRes(android.R.color.holo_red_light)
+                .bgColor(Color.WHITE)
+                .bgColorRes(android.R.color.white)
+                .into(mTextView);
+```
+| function | parameter |description|
+|:---:|:---:|:---:|
+| color() | int color | Set the foreground color of text 
+| colorRes() | int colorRes | Set the foreground color of text by Resource File
+| bgColor() | int color | Set the background color
+| bgColorRes() | int colorRes | Set the background color by Resource File
 
 
-#License
---------
+
+
+
+##License
 
     Copyright 2015 chenjj2048
 
