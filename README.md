@@ -1,9 +1,10 @@
 #SpannableStream
-A library for you to use SpannableString easyly.
+A library for you to use SpannableString easily.
 
 ##Example
 You can gain the [app demo](https://github.com/chenjj2048/SpannableStream/raw/master/app-release.apk) here.
 
+###Demo1
 ![snapshot 1](https://raw.githubusercontent.com/chenjj2048/SpannableStream/master/snap/1.gif)
 
 To achieve the effect, you can use code as follows:
@@ -32,7 +33,7 @@ SpannableStream.with(context)
                 .into(mTextView1);
 
 ```
-
+###Demo2
 ![snapshot 1](https://raw.githubusercontent.com/chenjj2048/SpannableStream/master/snap/2.gif)
 
 To achieve the effect, you can use code as follows:
@@ -76,28 +77,103 @@ To achieve the effect, you can use code as follows:
                 .into(this, R.id.textView2);
 ```
 
-##How to use
+##Supported Operation
 
-###color
+###1.Append Operation
+
+* appendText(CharSequence str);
+* appendText(@StringRes int resId);
+
+* appendNewLine();
+* appendNewLine(int count);
+
+* appendImage(Drawable drawable);
+* appendImage(@DrawableRes int drawableRes);
+* appendImage(Bitmap bitmap);
+
+* appendUrlText(String str);
+
+###2. Color Operation
+
+* color(@ColorInt int color);
+* colorRes(@ColorRes int colorRes);
+* bgColor(@ColorInt int color);
+* bgColorRes(@ColorRes int colorRes);
+  
+
+###3. TextSize Operation
+
+  Just choose one function to use in `textSizePx()`, `textSizeDp()`, `textSizeSp()` and `relativeTextSize()`.
+
+* textSizePx(int px);
+* textSizeDp(int dp);
+* textSizeSp(int sp);
+* relativeTextSize(float ratio);
+* scaleX(float ratio);
+
+###4. TypeFace Operation
+
+* bold();
+* italic();
+* underline();
+* strikeThrough();
+
+###5. SubScript and UpperScript
+
+* superScript();
+* subScript();
+* superScript(float textSizeRatio);
+* subScript(float textSizeRatio);
+    
+
+###6. Aligment Operation
+
+* aligmentCenter();
+* aligmentLeft();
+* aligmentRight();
+    
+
+###7. Click Operation
+
+When you want to achieve click operation and make the text color changing with pressing operation,you can use the `onClick()` function with two parameters. Otherwise, just use the `onClick()` function with one parameter.
+
+* onClick(IClickable.OnSpannableClickListener listener);
+* onClick(ColorConfig colorConfig, IClickable.OnSpannableClickListener listener);
+
+Here is the listener interface. You can use `SimpleSpannableClickListener` to simplify the code for writing the listener.
 
 ```java
-  SpannableStream.with(this)
-                .color(Color.RED)
-                .colorRes(android.R.color.holo_red_light)
-                .bgColor(Color.WHITE)
-                .bgColorRes(android.R.color.white)
+ interface OnSpannableClickListener {
+
+        void onSpannableItemClick(View widget, CharSequence str);
+
+        void onPressedStateChanged(boolean pressed);
+    }
+```
+
+When you want to make the clicked text changing color, You should use `ColorConfig` class. Just use like that:
+```java
+  ColorConfig.getDefault()
+                .colorNormal(Color.WHITE)
+                .colorPressed(Color.BLUE)
+                .bgColorNormal(Color.RED)
+                .bgColorPressed(Color.GREEN)
+                .colorNormal(context, android.R.color.white)
+                .colorPressed(context, android.R.color.holo_blue_light)
+                .bgColorNormal(context, android.R.color.holo_red_light)
+                .bgColorPressed(context, android.R.color.holo_green_light);
+```
+
+###8. Other Operation
+
+* textApperance(@StyleRes int resId);
+
+```java
+ SpannableStream.with(context)
+                .appendText("abcdefg")
+                .textApperance(R.style.text_style)
                 .into(mTextView);
 ```
-| function | parameter |description|
-|:---:|:---:|:---:|
-| color() | int color | Set the foreground color of text 
-| colorRes() | int colorRes | Set the foreground color of text by Resource File
-| bgColor() | int color | Set the background color
-| bgColorRes() | int colorRes | Set the background color by Resource File
-
-
-
-
 
 ##License
 
