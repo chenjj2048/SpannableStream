@@ -15,7 +15,7 @@ import android.widget.TextView;
  * @author chenjj2048
  */
 public interface IStringOperate {
-    interface Collection<T> extends Config<T>, Append<T>, Build, Setting, Replacement<T> {
+    interface Collection<T> extends Config<T>, Append<T>, Build, TextSetting, Replacement<T> {
     }
 
     interface Config<T> {
@@ -47,7 +47,7 @@ public interface IStringOperate {
          * because when use onClick()
          * the TextView will be automatically set that:
          * textView.setMovementMethod(CustomLinkMovementMethod.getInstance());
-         *
+         * <p>
          * It will set the
          *
          * @return SpannableStringBuilder
@@ -55,7 +55,7 @@ public interface IStringOperate {
         SpannableStringBuilder build();
     }
 
-    interface Setting {
+    interface TextSetting {
         void into(TextView textView);
 
         void into(Activity activity, @IdRes int textViewResId);

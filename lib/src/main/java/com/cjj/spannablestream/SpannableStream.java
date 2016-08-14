@@ -21,8 +21,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.cjj.spannablestream.click.CustomLinkMovementMethod;
-import com.cjj.spannablestream.click.OnSpannableClickListener;
 import com.cjj.spannablestream.color.ColorConfig;
+import com.cjj.spannablestream.interfacer.IClickable;
 import com.cjj.spannablestream.interfacer.ISpanOperate;
 import com.cjj.spannablestream.interfacer.ISpannable;
 
@@ -466,7 +466,7 @@ public class SpannableStream implements ISpannable {
      * @return this
      */
     @Override
-    public ISpannable onClick(OnSpannableClickListener listener) {
+    public ISpannable onClick(IClickable.OnSpannableClickListener listener) {
         SpannableOperate.getDefault().onClick(listener).build()
                 .apply(mList.getLast());
         return this;
@@ -478,7 +478,7 @@ public class SpannableStream implements ISpannable {
      * @return this
      */
     @Override
-    public ISpannable onClick(ColorConfig colorConfig, OnSpannableClickListener listener) {
+    public ISpannable onClick(ColorConfig colorConfig, IClickable.OnSpannableClickListener listener) {
         SpannableOperate.getDefault().onClick(colorConfig, listener).build()
                 .apply(mList.getLast());
         return this;

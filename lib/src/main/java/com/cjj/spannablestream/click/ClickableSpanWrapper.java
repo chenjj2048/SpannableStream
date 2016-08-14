@@ -7,14 +7,17 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 
 import com.cjj.spannablestream.color.ColorConfig;
+import com.cjj.spannablestream.interfacer.IClickable;
 
 /**
  * Created on 2016/8/12
  *
  * @author chenjj2048
  */
-public class ClickableSpanWrapper extends ClickableSpan {
-    private final OnSpannableClickListener mListener;
+public class ClickableSpanWrapper extends ClickableSpan implements
+        IClickable.OnSpannableClickListener, IClickable.TextSetting<ClickableSpanWrapper> {
+
+    private final IClickable.OnSpannableClickListener mListener;
     private final int mTextColorNormal;
     private final int mTextColorPressed;
     private final int mBackgroundColorNormal;
@@ -24,7 +27,7 @@ public class ClickableSpanWrapper extends ClickableSpan {
     @NonNull
     private CharSequence mClickText = "";
 
-    public ClickableSpanWrapper(ColorConfig colorConfig, OnSpannableClickListener listener) {
+    public ClickableSpanWrapper(ColorConfig colorConfig, IClickable.OnSpannableClickListener listener) {
         this.mListener = listener;
         this.mTextColorNormal = colorConfig.getTextColorNormal();
         this.mTextColorPressed = colorConfig.getTextColorPressed();
@@ -32,17 +35,25 @@ public class ClickableSpanWrapper extends ClickableSpan {
         this.mBackgroundColorPressed = colorConfig.getBackgroundColorPressed();
     }
 
+    @Override
     public ClickableSpanWrapper setClickText(CharSequence clickText) {
         this.mClickText = (clickText == null) ? "" : clickText;
         return this;
     }
 
+    @Override
     public ClickableSpanWrapper setClickText(CharSequence clickText, int start, int end) {
         CharSequence str = (clickText == null) ? "" : clickText.subSequence(start, end);
         return this.setClickText(str);
     }
 
-    protected void onPressStateChanged(boolean pressed) {
+    @Override
+    public void onSpannableItemClick(View widget, CharSequence str) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void onPressedStateChanged(boolean pressed) {
         this.isPressed = pressed;
         if (mListener != null)
             mListener.onPressedStateChanged(pressed);

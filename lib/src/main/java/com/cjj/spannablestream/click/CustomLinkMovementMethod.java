@@ -7,12 +7,19 @@ import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import com.cjj.spannablestream.interfacer.IClickable;
+
 /**
- * 参考自
+ * 修改自
  * https://github.com/iwgang/SimplifySpan/blob/973a985725b1579adb5ea967974b068b3171adf1/library/src/main/java/cn/iwgang/simplifyspan/other/CustomLinkMovementMethod.java
  */
-public class CustomLinkMovementMethod extends LinkMovementMethod {
-    private ClickableSpanWrapper mCustomClickableSpan;
+public class CustomLinkMovementMethod<T extends IClickable.OnSpannableClickListener> extends LinkMovementMethod {
+    private final Class<T> CLAZZ;
+    private T mCustomClickableSpan;
+
+    public CustomLinkMovementMethod(Class<T> clazz) {
+        this.CLAZZ = clazz;
+    }
 
     public static CustomLinkMovementMethod getInstance() {
         return Singleton.INSTANCE;
@@ -25,19 +32,19 @@ public class CustomLinkMovementMethod extends LinkMovementMethod {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mCustomClickableSpan = getPressedSpan(textView, spannable, event);
             if (mCustomClickableSpan != null) {
-                mCustomClickableSpan.onPressStateChanged(true);
+                mCustomClickableSpan.onPressedStateChanged(true);
                 Selection.setSelection(spannable, spannable.getSpanStart(mCustomClickableSpan), spannable.getSpanEnd(mCustomClickableSpan));
             }
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            ClickableSpanWrapper touchedSpan = getPressedSpan(textView, spannable, event);
+            T touchedSpan = getPressedSpan(textView, spannable, event);
             if (mCustomClickableSpan != null && touchedSpan != mCustomClickableSpan) {
-                mCustomClickableSpan.onPressStateChanged(false);
+                mCustomClickableSpan.onPressedStateChanged(false);
                 mCustomClickableSpan = null;
                 Selection.removeSelection(spannable);
             }
         } else {
             if (mCustomClickableSpan != null) {
-                mCustomClickableSpan.onPressStateChanged(false);
+                mCustomClickableSpan.onPressedStateChanged(false);
                 super.onTouchEvent(textView, spannable, event);
             }
             mCustomClickableSpan = null;
@@ -46,7 +53,7 @@ public class CustomLinkMovementMethod extends LinkMovementMethod {
         return true;
     }
 
-    private ClickableSpanWrapper getPressedSpan(TextView textView, Spannable spannable, MotionEvent event) {
+    private T getPressedSpan(TextView textView, Spannable spannable, MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
 
@@ -60,8 +67,8 @@ public class CustomLinkMovementMethod extends LinkMovementMethod {
         int line = layout.getLineForVertical(y);
         int off = layout.getOffsetForHorizontal(line, x);
 
-        ClickableSpanWrapper[] link = spannable.getSpans(off, off, ClickableSpanWrapper.class);
-        ClickableSpanWrapper touchedSpan = null;
+        T[] link = spannable.getSpans(off, off, CLAZZ);
+        T touchedSpan = null;
         if (link.length > 0) {
             touchedSpan = link[0];
         }
@@ -69,6 +76,7 @@ public class CustomLinkMovementMethod extends LinkMovementMethod {
     }
 
     private static class Singleton {
-        static final CustomLinkMovementMethod INSTANCE = new CustomLinkMovementMethod();
+        static final CustomLinkMovementMethod INSTANCE =
+                new CustomLinkMovementMethod<>(ClickableSpanWrapper.class);
     }
 }

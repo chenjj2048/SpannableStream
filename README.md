@@ -1,32 +1,18 @@
-package com.cjj.demo.spannablestream;
+#SpannableStream
+A library for you to use SpannableString easyly.
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+###Screenshot
+1
+2
 
-import com.cjj.spannablestream.SpannableOperate;
-import com.cjj.spannablestream.SpannableStream;
-import com.cjj.spannablestream.click.SimpleSpannableClickListener;
-import com.cjj.spannablestream.color.ColorConfig;
-import com.cjj.spannablestream.interfacer.IClickable;
 
-public class MainActivity extends AppCompatActivity {
+#Example
+--------
+You can gain the app demo here.
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        initTextView1();
-        initTextView2();
-    }
-
-    private void initTextView1() {
-        TextView mTextView1 = (TextView) findViewById(R.id.textView1);
-        SpannableStream.with(this)
+To achieve the effect in first screenshot, you can use code as follows:
+```java
+SpannableStream.with(context)
                 .appendText("Example 1").aligmentCenter().bold().underline().relativeTextSize(1.5f).appendNewLine()
                 .appendText("ForegroundColor").colorRes(android.R.color.holo_red_light).appendNewLine()
                 .appendText("BackgroundColor").bgColorRes(android.R.color.holo_orange_light).color(Color.WHITE).appendNewLine(2)
@@ -48,10 +34,12 @@ public class MainActivity extends AppCompatActivity {
                 .appendText("Aligment Right").aligmentRight().appendNewLine(2)
                 .appendNewLine(5)
                 .into(mTextView1);
-    }
 
-    private void initTextView2() {
-        SpannableOperate mReplaceAttributes = SpannableOperate.with(this)
+```
+
+To achieve the effect in second screenshot, you can use code as follows:
+```java
+  SpannableOperate mReplaceAttributes = SpannableOperate.with(this)
                 .italic()
                 .relativeTextSize(2f)
                 .onClick(ColorConfig.getDefault()
@@ -88,5 +76,23 @@ public class MainActivity extends AppCompatActivity {
                 .replaceString("text", mReplaceAttributes)
                 .appendNewLine(20)
                 .into(this, R.id.textView2);
-    }
-}
+```
+
+
+
+#License
+--------
+
+    Copyright 2015 chenjj2048
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.

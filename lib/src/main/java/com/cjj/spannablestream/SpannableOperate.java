@@ -23,8 +23,8 @@ import android.text.style.TextAppearanceSpan;
 import android.text.style.UnderlineSpan;
 
 import com.cjj.spannablestream.click.ClickableSpanWrapper;
-import com.cjj.spannablestream.click.OnSpannableClickListener;
 import com.cjj.spannablestream.color.ColorConfig;
+import com.cjj.spannablestream.interfacer.IClickable;
 import com.cjj.spannablestream.interfacer.ISpanOperate;
 
 /**
@@ -386,7 +386,7 @@ public abstract class SpannableOperate implements ISpanOperate.Collection<Spanna
      * @return this
      */
     @Override
-    public SpannableOperate onClick(OnSpannableClickListener listener) {
+    public SpannableOperate onClick(IClickable.OnSpannableClickListener listener) {
         return onClick(ColorConfig.getDefault(), listener);
     }
 
@@ -396,7 +396,7 @@ public abstract class SpannableOperate implements ISpanOperate.Collection<Spanna
      * @return this
      */
     @Override
-    public SpannableOperate onClick(final ColorConfig colorConfig, final OnSpannableClickListener listener) {
+    public SpannableOperate onClick(final ColorConfig colorConfig, final IClickable.OnSpannableClickListener listener) {
         return new SpannableOperate(this) {
             @Override
             public Object getCurrentSpan() {

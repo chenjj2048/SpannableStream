@@ -5,7 +5,6 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.StyleRes;
 import android.text.SpannableString;
 
-import com.cjj.spannablestream.click.OnSpannableClickListener;
 import com.cjj.spannablestream.color.ColorConfig;
 
 /**
@@ -69,9 +68,9 @@ public interface ISpanOperate {
     }
 
     interface Click<T> {
-        T onClick(OnSpannableClickListener listener);
+        T onClick(IClickable.OnSpannableClickListener listener);
 
-        T onClick(ColorConfig colorConfig, OnSpannableClickListener listener);
+        T onClick(ColorConfig colorConfig, IClickable.OnSpannableClickListener listener);
     }
 
     interface Other<T> {
