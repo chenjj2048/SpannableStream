@@ -9,6 +9,8 @@ import android.support.annotation.StringRes;
 import android.text.SpannableStringBuilder;
 import android.widget.TextView;
 
+import com.cjj.spannablestream.SpannableOperate;
+
 /**
  * Created on 2016/8/11
  *
@@ -62,6 +64,8 @@ public interface IStringOperate {
     }
 
     interface Replacement<T> {
-        T replaceString(CharSequence str, ISpanOperate.Build spans);
+        T replaceString(CharSequence str, SpannableOperate spanOperate);
+
+        T replaceAllString(CharSequence str, SpannableOperate spannableOperate);
     }
 }

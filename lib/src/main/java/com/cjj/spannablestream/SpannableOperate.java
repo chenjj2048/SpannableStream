@@ -32,7 +32,7 @@ import com.cjj.spannablestream.interfacer.ISpanOperate;
  *
  * @author chenjj2048
  */
-public abstract class SpannableOperate implements ISpanOperate.Collection<SpannableOperate>, ISpanOperate.Build {
+public abstract class SpannableOperate implements ISpanOperate.Collection<SpannableOperate>, ISpanOperate.SpanBuilder {
     private static final SpannableOperate DEFAULT_INSTANCE = SpannableOperate.with(null);
     private final SpannableOperate mParent;
     private final Context context;
@@ -81,7 +81,7 @@ public abstract class SpannableOperate implements ISpanOperate.Collection<Spanna
     }
 
     @Override
-    public ISpanOperate.Build build() {
+    public ISpanOperate.SpanBuilder build() {
         return this;
     }
 

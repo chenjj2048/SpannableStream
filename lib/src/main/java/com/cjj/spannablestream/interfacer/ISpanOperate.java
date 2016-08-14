@@ -77,7 +77,7 @@ public interface ISpanOperate {
         T textApperance(@StyleRes int resId);
     }
 
-    interface Build {
+    interface SpanBuilder {
         Object getCurrentSpan();
 
         void apply(SpannableString spannableString);
@@ -86,6 +86,6 @@ public interface ISpanOperate {
 
         int getOperateCount();
 
-        Build build();
+        SpanBuilder build();
     }
 }

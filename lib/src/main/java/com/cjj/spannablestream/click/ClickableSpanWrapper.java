@@ -53,10 +53,10 @@ public class ClickableSpanWrapper extends ClickableSpan implements
     }
 
     @Override
-    public void onPressedStateChanged(boolean pressed) {
-        this.isPressed = pressed;
+    public void onPressedStateChanged(boolean isPressed) {
+        this.isPressed = isPressed;
         if (mListener != null)
-            mListener.onPressedStateChanged(pressed);
+            mListener.onPressedStateChanged(isPressed);
     }
 
     @Override

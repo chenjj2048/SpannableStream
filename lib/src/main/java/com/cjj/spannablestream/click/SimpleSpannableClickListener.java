@@ -9,6 +9,6 @@ import com.cjj.spannablestream.interfacer.IClickable;
  */
 public abstract class SimpleSpannableClickListener implements IClickable.OnSpannableClickListener {
     @Override
-    public void onPressedStateChanged(boolean pressed) {
+    public void onPressedStateChanged(boolean isPressed) {
     }
 }

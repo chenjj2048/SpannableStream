@@ -133,7 +133,20 @@ To achieve the effect, you can use code as follows:
 * aligmentRight();
     
 
-###7. Click Operation
+###7. Using R.style.xxx to set the text style
+
+* textApperance(@StyleRes int resId);
+
+You can set the textView attribute by using `textApperance(R.style.xxx)`. Just as follows:
+
+```java
+ SpannableStream.with(context)
+                .appendText("abcdefg")
+                .textApperance(R.style.text_style)
+                .into(mTextView);
+```
+
+###8. Click Operation
 
 When you want to achieve click operation and make the text color changing with pressing operation,you can use the `onClick()` function with two parameters. Otherwise, just use the `onClick()` function with one parameter.
 
@@ -145,9 +158,9 @@ Here is the listener interface. You can use `SimpleSpannableClickListener` to si
 ```java
  interface OnSpannableClickListener {
 
-        void onSpannableItemClick(View widget, CharSequence str);
+        void onSpannableItemClick(View textView, CharSequence str);
 
-        void onPressedStateChanged(boolean pressed);
+        void onPressedStateChanged(boolean isPressed);
     }
 ```
 
@@ -164,18 +177,22 @@ When you want to make the clicked text changing color, You should use `ColorConf
                 .bgColorPressed(context, android.R.color.holo_green_light);
 ```
 
-###8. Other Operation
+###9. Replace Operation
 
-* textApperance(@StyleRes int resId);
+* replaceString(CharSequence str, SpannableOperate spanOperate);
+* replaceAllString(CharSequence str, SpannableOperate spannableOperate);
 
+You can use `SpannableOperate.with(context)` or `SpannableOperate.getDefault()` to create the instance. The difference between them was whether you need context at the next operation. Some operations will throw `NullPointException` if you didn't use `SpannableOperate.with(context)`, such as `.colorRes()`, `.textSizeSp()` and so on.
+
+ `SpannableOperate` is used just like that:
 ```java
- SpannableStream.with(context)
-                .appendText("abcdefg")
-                .textApperance(R.style.text_style)
-                .into(mTextView);
+ SpannableOperate.getDefault()
+                .underline()
+                .color(Color.RED)
+                .italic();
 ```
 
-##License
+#License
 
     Copyright 2015 chenjj2048
 

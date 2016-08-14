@@ -22,6 +22,6 @@ public interface IClickable {
 
         void onSpannableItemClick(View widget, CharSequence str);
 
-        void onPressedStateChanged(boolean pressed);
+        void onPressedStateChanged(boolean isPressed);
     }
 }

@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.cjj.spannablestream.click.CustomLinkMovementMethod;
 import com.cjj.spannablestream.color.ColorConfig;
 import com.cjj.spannablestream.interfacer.IClickable;
-import com.cjj.spannablestream.interfacer.ISpanOperate;
 import com.cjj.spannablestream.interfacer.ISpannable;
 
 import java.util.Iterator;
@@ -537,26 +536,43 @@ public class SpannableStream implements ISpannable {
     /**
      * Replace last spannableString by new span
      *
-     * @param str   str
-     * @param spans new spans attribute
+     * @param str              str
+     * @param spannableOperate new spans attribute
      * @return this
      */
     @Override
-    public ISpannable replaceString(CharSequence str, ISpanOperate.Build spans) {
+    public ISpannable replaceString(CharSequence str, SpannableOperate spannableOperate) {
+        internalReplace(mList.getLast(), str, spannableOperate);
+        return this;
+    }
+
+    /**
+     * Replace all the string in List.
+     *
+     * @param str              str
+     * @param spannableOperate spannableOperate
+     * @return this
+     */
+    @Override
+    public ISpannable replaceAllString(CharSequence str, SpannableOperate spannableOperate) {
+        for (SpannableString s : mList)
+            internalReplace(s, str, spannableOperate);
+        return this;
+    }
+
+    private void internalReplace(SpannableString mSpannableString, CharSequence targetString, SpannableOperate mSpannableOperate) {
         int lastIndex = 0;
         final int FLAG = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-        final SpannableString spanString = mList.getLast();
 
-        if (spans == null || spanString == null || TextUtils.isEmpty(str))
-            return this;
+        if (mSpannableOperate == null || mSpannableString == null || TextUtils.isEmpty(targetString))
+            return;
 
         while (lastIndex != -1) {
-            lastIndex = spanString.toString().indexOf(str.toString(), lastIndex);
+            lastIndex = mSpannableString.toString().indexOf(targetString.toString(), lastIndex);
             if (lastIndex != -1) {
-                spans.apply(spanString, lastIndex, lastIndex + str.length(), FLAG);
-                lastIndex += str.length();
+                mSpannableOperate.apply(mSpannableString, lastIndex, lastIndex + targetString.length(), FLAG);
+                lastIndex += targetString.length();
             }
         }
-        return this;
     }
 }
