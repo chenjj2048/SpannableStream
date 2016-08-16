@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.cjj.spannablestream.interfacer.IClickable;
 
 /**
- * 修改自
+ * Changed with follow code.
  * https://github.com/iwgang/SimplifySpan/blob/973a985725b1579adb5ea967974b068b3171adf1/library/src/main/java/cn/iwgang/simplifyspan/other/CustomLinkMovementMethod.java
  */
 public class CustomLinkMovementMethod<T extends IClickable.OnSpannableClickListener> extends LinkMovementMethod {

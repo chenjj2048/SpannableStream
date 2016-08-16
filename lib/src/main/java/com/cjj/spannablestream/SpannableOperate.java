@@ -48,8 +48,6 @@ public abstract class SpannableOperate implements ISpanOperate.Collection<Spanna
     }
 
     /**
-     * 装饰者模式
-     *
      * @param parent parent
      */
     private SpannableOperate(SpannableOperate parent) {
@@ -290,7 +288,7 @@ public abstract class SpannableOperate implements ISpanOperate.Collection<Spanna
 
     /**
      * ============================
-     * Super & Sub Script Operate
+     * SuperScript and SubScript Operate
      * ============================
      */
 
@@ -380,7 +378,6 @@ public abstract class SpannableOperate implements ISpanOperate.Collection<Spanna
      * The sequence of onClick() using will affect the display effects.
      * Such as this.color().onClick() and this.onClick().color() they are diffenet.
      * Just try it to gain what you want.
-     * <p>
      *
      * @param listener listener
      * @return this

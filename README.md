@@ -2,7 +2,7 @@
 A library for you to use SpannableString easily.
 
 ##Example
-You can gain the [app demo](https://github.com/chenjj2048/SpannableStream/raw/master/app-release.apk) here.
+You can gain the [app demo](http://fir.im/tzl7) here.
 
 ###Demo1
 ![snapshot 1](https://raw.githubusercontent.com/chenjj2048/SpannableStream/master/snap/1.gif)
@@ -184,13 +184,18 @@ When you want to make the clicked text changing color, You should use `ColorConf
 
 You can use `SpannableOperate.with(context)` or `SpannableOperate.getDefault()` to create the instance. The difference between them was whether you need context at the next operation. Some operations will throw `NullPointException` if you didn't use `SpannableOperate.with(context)`, such as `.colorRes()`, `.textSizeSp()` and so on.
 
- `SpannableOperate` is used just like that:
+ `SpannableOperate` is used just like that as the new attribute after replacement.
 ```java
  SpannableOperate.getDefault()
                 .underline()
                 .color(Color.RED)
                 .italic();
 ```
+
+##Todo
+- [ ]Add text background drawable operation;
+- [ ]support custom span operation;
+
 
 #License
 
