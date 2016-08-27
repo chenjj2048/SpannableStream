@@ -198,6 +198,10 @@ You can use `SpannableOperate.with(context)` or `SpannableOperate.getDefault()` 
 
 
 #Usage
+
+Example for Gradle:
+Anyone tell me how to add to jcenter?
+
 ```groovy
 repositories {
     maven { url 'https://dl.bintray.com/chenjj2048/maven' }
