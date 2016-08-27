@@ -193,9 +193,20 @@ You can use `SpannableOperate.with(context)` or `SpannableOperate.getDefault()` 
 ```
 
 ##Todo
-- [ ]Add text background drawable operation;
-- [ ]support custom span operation;
+[x]Add text background drawable operation;
+[x]support custom span operation;
 
+
+#Usage
+```groovy
+repositories {
+    maven { url 'https://dl.bintray.com/chenjj2048/maven' }
+}
+
+dependencies {
+    compile 'com.cjj:SpannableStream:1.0.0'
+}
+```
 
 #License
 
